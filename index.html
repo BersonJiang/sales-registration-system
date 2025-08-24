@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>灯火赞助登记系统</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>灯火赞助登记系统</h1>
+            <nav>
+                <button class="nav-btn active" onclick="showSection('sales')">赞助登记</button>
+                <button class="nav-btn" onclick="showSection('customers')">充值管理</button>
+                <button class="nav-btn" onclick="showSection('statistics')">统计查询</button>
+                <button class="nav-btn" onclick="showSection('records')">销售记录</button>
+                <button class="nav-btn" onclick="showSection('admin')">管理员</button>
+            </nav>
+        </header>
+
+        <!-- 销售登记模块 -->
+        <section id="sales" class="section active">
+            <h2>销售登记</h2>
+            <form id="salesForm" class="form-container">
+                <div class="form-group">
+                    <label for="salesperson">销售员:</label>
+                    <select id="salesperson" required>
+                        <option value="">请选择销售员</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="salespersonPassword">销售密码:</label>
+                    <input type="password" id="salespersonPassword" placeholder="输入销售密码" required>
+                </div>
+                <div class="form-group">
+                    <label for="customer">客户姓名:</label>
+                    <input type="text" id="customer" required>
+                </div>
+                <div class="form-group">
+                    <label for="licensePlate">车牌号码:</label>
+                    <input type="text" id="licensePlate" placeholder="如：京A12345" required>
+                </div>
+                <div class="form-group">
+                        <label for="product">商品名称:</label>
+                        <select id="product" required>
+                            <option value="">请选择商品类型</option>
+                            <option value="赞助物品">赞助物品</option>
+                            <option value="赞助车">赞助车</option>
+                            <option value="定制车">定制车</option>
+                            <option value="赞助船">赞助船</option>
+                            <option value="赞助飞机">赞助飞机</option>
+                            <option value="赞助产业">赞助产业</option>
+                            <option value="赞助房产">赞助房产</option>
+                        </select>
+                    </div>
+
+                <div class="form-group">
+                    <label for="price">金额:</label>
+                    <input type="number" id="price" step="0.01" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="paymentType">付款方式:</label>
+                    <select id="paymentType" required>
+                        <option value="cash">现金</option>
+                        <option value="balance">余额支付</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="salesImage">上传图片:</label>
+                    <input type="file" id="salesImage" accept="image/*" multiple>
+                    <small class="form-hint">可选择多张图片，支持JPG、PNG、GIF格式</small>
+                </div>
+                <button type="submit" class="btn-primary">登记销售</button>
+            </form>
+        </section>
+
+        <!-- 充值管理模块 -->
+        <section id="customers" class="section">
+            <h2>充值管理</h2>
+            <div class="customer-management">
+                <!-- 客户充值 -->
+                <div id="customerRechargeForm" class="customer-form">
+                    <h3>客户充值</h3>
+                    <form id="rechargeForm" class="form-container">
+                        <div class="form-group">
+                            <label for="rechargeSalesperson">销售员:</label>
+                            <select id="rechargeSalesperson" required>
+                                <option value="">请选择销售员</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="rechargePassword">密码:</label>
+                            <input type="password" id="rechargePassword" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="rechargeCustomer">客户姓名:</label>
+                            <input type="text" id="rechargeCustomer" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="rechargeAmount">充值金额:</label>
+                            <input type="number" id="rechargeAmount" step="0.01" min="0.01" required>
+                        </div>
+                        <button type="submit" class="btn-primary">确认充值</button>
+                    </form>
+                </div>
+
+
+            </div>
+        </section>
+
+        <!-- 统计查询模块 -->
+        <section id="statistics" class="section">
+            <h2>统计查询</h2>
+            <div class="statistics-container">
+
+                <div class="stat-card">
+                    <h3>本周销售额度</h3>
+                    <div id="weeklySales" class="stat-value">¥0.00</div>
+                    <div class="weekly-actions">
+                        <button onclick="calculateWeeklySales()" class="btn-secondary">刷新本周</button>
+                        <button onclick="clearWeeklySales()" class="btn-danger">清理本周</button>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <h3>销售员业绩查询</h3>
+                    <div class="form-group">
+                        <input type="text" id="salespersonQuery" placeholder="输入销售员姓名">
+                        <button onclick="querySalespersonPerformance()" class="btn-secondary">查询</button>
+                    </div>
+                    <div id="salespersonResult" class="result-display"></div>
+                </div>
+                <div class="stat-card">
+                    <h3>客户消费查询</h3>
+                    <div class="form-group">
+                        <input type="text" id="customerSpendingQuery" placeholder="输入客户姓名">
+                        <button onclick="queryCustomerSpending()" class="btn-secondary">查询</button>
+                    </div>
+                    <div id="customerSpendingResult" class="result-display"></div>
+                </div>
+                <div class="stat-card">
+                    <h3>销售员销售额度查询</h3>
+                    <div class="form-group">
+                        <label for="startDate">开始日期:</label>
+                        <input type="date" id="startDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="endDate">结束日期:</label>
+                        <input type="date" id="endDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="individualSalesperson">查询个别销售员:</label>
+                        <select id="individualSalesperson">
+                            <option value="">请选择销售员</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <button onclick="queryIndividualSalespersonSales()" class="btn-secondary">查询个别销售员</button>
+                        <button onclick="querySalespersonSalesByDate()" class="btn-secondary">查询所有销售员</button>
+                    </div>
+                    <div id="salespersonSalesResult" class="result-display"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 销售记录模块 -->
+        <section id="records" class="section">
+            <h2>销售记录</h2>
+            <div class="records-container">
+                <div class="filter-bar">
+                    <input type="text" id="recordFilter" placeholder="搜索销售员、客户、车牌号或商品...">
+                    <button onclick="filterRecords()" class="btn-secondary">搜索</button>
+                    <button onclick="showAllRecords()" class="btn-secondary">显示全部</button>
+                </div>
+                <div id="recordsList" class="records-list"></div>
+            </div>
+        </section>
+
+        <!-- 管理员模块 -->
+        <section id="admin" class="section">
+            <h2>管理员设置</h2>
+            <div class="admin-container">
+                <!-- 管理员登录 -->
+                <div id="adminLogin" class="admin-login">
+                    <h3>管理员登录</h3>
+                    <form id="adminLoginForm">
+                        <div class="form-group">
+                            <label for="adminPassword">管理员密码:</label>
+                            <input type="password" id="adminPassword" placeholder="请输入管理员密码" required>
+                        </div>
+                        <button type="submit" class="btn-primary">登录</button>
+                    </form>
+                    <p class="admin-hint">默认密码：admin123</p>
+                </div>
+
+                <!-- 管理员面板 -->
+                <div id="adminPanel" class="admin-panel" style="display: none;">
+                    <div class="admin-actions">
+                        <button onclick="showAdminSection('permissions')" class="admin-tab-btn active">权限管理</button>
+                        <button onclick="showAdminSection('records')" class="admin-tab-btn">记录管理</button>
+                        <button onclick="showAdminSection('settings')" class="admin-tab-btn">系统设置</button>
+                        <button onclick="adminLogout()" class="btn-secondary">退出登录</button>
+                    </div>
+
+                    <!-- 权限管理 -->
+                    <div id="permissions" class="admin-section active">
+                        <h3>销售员权限管理</h3>
+                        <div class="permission-management">
+                            <div class="add-salesperson">
+                                <h4>添加授权销售员</h4>
+                                <form id="addSalespersonForm">
+                                    <div class="form-group">
+                                        <label for="newSalesperson">销售员姓名:</label>
+                                        <input type="text" id="newSalesperson" placeholder="输入销售员姓名" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="newSalespersonPassword">销售密码:</label>
+                                        <input type="password" id="newSalespersonPassword" placeholder="设置销售密码" required>
+                                    </div>
+                                    <button type="submit" class="btn-primary">添加授权</button>
+                                </form>
+                            </div>
+                            <div class="authorized-list">
+                                <h4>已授权销售员列表</h4>
+                                <div id="authorizedSalespeople" class="authorized-salespeople"></div>
+                            </div>
+                            <div class="change-salesperson-password">
+                                <h4>修改销售员密码</h4>
+                                <form id="changeSalespersonPasswordForm">
+                                    <div class="form-group">
+                                        <label for="targetSalesperson">销售员姓名:</label>
+                                        <input type="text" id="targetSalesperson" placeholder="输入销售员姓名" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="newSalesPassword">新销售密码:</label>
+                                        <input type="password" id="newSalesPassword" placeholder="输入新密码" required>
+                                    </div>
+                                    <button type="submit" class="btn-primary">修改密码</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 记录管理 -->
+                    <div id="records" class="admin-section">
+                        <h3>销售记录管理</h3>
+                        <div class="record-management">
+                            <div class="record-search">
+                                <h4>搜索记录</h4>
+                                <div class="search-filters">
+                                    <input type="text" id="searchCustomer" placeholder="客户姓名">
+                                    <input type="text" id="searchSalesperson" placeholder="销售员">
+                                    <input type="date" id="searchDate">
+                                    <button onclick="searchRecords()" class="btn-primary">搜索</button>
+                                    <button onclick="showAllRecordsForEdit()" class="btn-secondary">显示所有记录</button>
+                                </div>
+                            </div>
+                            <div class="records-list">
+                                <h4>销售记录列表</h4>
+                                <div id="editableRecordsList" class="editable-records-list"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 系统设置 -->
+                    <div id="settings" class="admin-section">
+                        <h3>系统设置</h3>
+                        <div class="system-settings">
+                            <div class="setting-item">
+                                <h4>修改管理员密码</h4>
+                                <form id="changePasswordForm">
+                                    <div class="form-group">
+                                        <label for="currentPassword">当前密码:</label>
+                                        <input type="password" id="currentPassword" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="newPassword">新密码:</label>
+                                        <input type="password" id="newPassword" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="confirmPassword">确认新密码:</label>
+                                        <input type="password" id="confirmPassword" required>
+                                    </div>
+                                    <button type="submit" class="btn-primary">修改密码</button>
+                                </form>
+                            </div>
+                            <div class="setting-item">
+                                <h4>数据管理</h4>
+                                <button onclick="exportData()" class="btn-secondary">导出数据</button>
+                                <button onclick="clearAllData()" class="btn-danger">清空所有数据</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <!-- 图片模态框 -->
+    <div id="imageModal" class="image-modal" onclick="closeImageModal()">
+        <span class="close-modal" onclick="closeImageModal()">&times;</span>
+        <img class="modal-content" id="modalImage">
+        <div id="imageCaption" class="image-caption"></div>
+    </div>
+
+    <!-- 编辑记录模态框 -->
+    <div id="editRecordModal" class="edit-modal" style="display: none;">
+        <div class="edit-modal-content">
+            <span class="close-modal" onclick="closeEditModal()">&times;</span>
+            <h3>编辑销售记录</h3>
+            <form id="editRecordForm">
+                <div class="form-group">
+                    <label for="editAmount">销售金额:</label>
+                    <input type="number" id="editAmount" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="editCustomer">客户姓名:</label>
+                    <input type="text" id="editCustomer" required>
+                </div>
+                <div class="form-group">
+                    <label for="editLicensePlate">车牌号:</label>
+                    <input type="text" id="editLicensePlate">
+                </div>
+                <div class="form-group">
+                    <label for="editProduct">产品:</label>
+                    <select id="editProduct" required>
+                        <option value="">请选择商品类型</option>
+                        <option value="赞助物品">赞助物品</option>
+                        <option value="赞助车">赞助车</option>
+                        <option value="定制车">定制车</option>
+                        <option value="赞助船">赞助船</option>
+                        <option value="赞助飞机">赞助飞机</option>
+                        <option value="赞助产业">赞助产业</option>
+                        <option value="赞助房产">赞助房产</option>
+                        <option value="充值">充值</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editPaymentType">付款方式:</label>
+                    <select id="editPaymentType" required>
+                        <option value="现金">现金</option>
+                        <option value="余额支付">余额支付</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editSalesperson">销售员:</label>
+                    <select id="editSalesperson" required></select>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">保存修改</button>
+                    <button type="button" onclick="closeEditModal()" class="btn-secondary">取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
